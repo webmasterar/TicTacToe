@@ -1,5 +1,6 @@
 package ttt;
 
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,8 +33,9 @@ public class TicTacToe extends JFrame implements ActionListener {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 this.board[i][j] = new JButton();
-                this.add(this.board[i][j]);
+                this.board[i][j].setFont(new Font("Arial", Font.PLAIN, 36));
                 this.board[i][j].addActionListener(this);
+                this.add(this.board[i][j]);
             }
         }
         super.setSize(this.dimension, this.dimension);
@@ -47,12 +49,15 @@ public class TicTacToe extends JFrame implements ActionListener {
         if (b.getText().equals("")) {
             b.setText((this.turn) ? "X" : "O");
             this.turn = !this.turn;
-            this.turnsTaken++;
-            if (this.turnsTaken == 9) {
+            if (this.checkForWinner()) {
                 this.gameOver();
+            } else {
+                this.turnsTaken++;
+                if (this.turnsTaken == 9) {
+                    this.gameOver();
+                }
             }
         }
-        this.checkForWinner();
     }
 
     public static void main(String[] args) {
@@ -68,7 +73,7 @@ public class TicTacToe extends JFrame implements ActionListener {
         this.turnsTaken = 0;
     }
 
-    private void checkForWinner() {
+    private boolean checkForWinner() {
         String winner = "";
         //row by row
         for (int i = 0; i < 3; i++) {
@@ -96,8 +101,9 @@ public class TicTacToe extends JFrame implements ActionListener {
         //declare winner
         if (!winner.equals("")) {
             JOptionPane.showMessageDialog(this, "The winner is " + winner + "!");
-            this.gameOver();
+            return true;
         }
+        return false;
     }
 
     private void gameOver() {
