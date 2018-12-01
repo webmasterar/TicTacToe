@@ -1,12 +1,18 @@
 package ttt;
 
+import java.awt.BorderLayout;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /**
  * The classic TicTacToe game
@@ -20,27 +26,59 @@ public class TicTacToe extends JFrame implements ActionListener {
     private int dimension;
     private boolean turn;
     private short turnsTaken;
+    private int draws, oWins, xWins;
+    private JLabel drawsLbl, xWinsLbl, oWinsLbl;
     private JButton[][] board;
     
     public TicTacToe() {
+        //init
         super("TicTacToe");
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        super.setLayout(new GridLayout(3, 3));
+        super.setLayout(new BorderLayout());
         this.dimension = 300;
         this.turnsTaken = 0;
+        this.draws = 0;
+        this.oWins = 0;
+        this.xWins = 0;
         this.turn = true;
+        //board
+        JPanel boardPnl = new JPanel(new GridLayout(3, 3));
+        boardPnl.setPreferredSize(new Dimension(this.dimension, this.dimension));
+        this.add(boardPnl, BorderLayout.CENTER);
         this.board = new JButton[3][3];
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 this.board[i][j] = new JButton();
-                this.board[i][j].setFont(new Font("Arial", Font.PLAIN, 36));
+                this.board[i][j].setFont(new Font("Arial", Font.BOLD, 40));
                 this.board[i][j].addActionListener(this);
-                this.add(this.board[i][j]);
+                boardPnl.add(this.board[i][j]);
             }
         }
-        super.setSize(this.dimension, this.dimension);
-        this.setVisible(true);
+        //scores
+        JPanel scoresPnl = new JPanel(new GridLayout(1, 6));
+        this.add(scoresPnl, BorderLayout.SOUTH);
+        JLabel dLbl = new JLabel("Draws:");
+        dLbl.setHorizontalAlignment(JLabel.CENTER);
+        scoresPnl.add(dLbl);
+        this.drawsLbl = new JLabel(String.valueOf(draws));
+        this.drawsLbl.setHorizontalAlignment(JLabel.CENTER);
+        scoresPnl.add(this.drawsLbl);
+        JLabel xLbl = new JLabel("X wins:");
+        xLbl.setHorizontalAlignment(JLabel.CENTER);
+        scoresPnl.add(xLbl);
+        this.xWinsLbl = new JLabel(String.valueOf(xWins));
+        this.xWinsLbl.setHorizontalAlignment(JLabel.CENTER);
+        scoresPnl.add(this.xWinsLbl);
+        JLabel oLbl = new JLabel("O wins:");
+        oLbl.setHorizontalAlignment(JLabel.CENTER);
+        scoresPnl.add(oLbl);
+        this.oWinsLbl = new JLabel(String.valueOf(oWins));
+        this.oWinsLbl.setHorizontalAlignment(JLabel.CENTER);
+        scoresPnl.add(this.oWinsLbl);
+        //display
         this.setLocationRelativeTo(null);
+        this.setVisible(true);
+        this.pack();
     }
     
     @Override
@@ -54,6 +92,8 @@ public class TicTacToe extends JFrame implements ActionListener {
             } else {
                 this.turnsTaken++;
                 if (this.turnsTaken == 9) {
+                    this.draws += 1;
+                    this.drawsLbl.setText(String.valueOf(this.draws));
                     this.gameOver();
                 }
             }
@@ -101,6 +141,13 @@ public class TicTacToe extends JFrame implements ActionListener {
         //declare winner
         if (!winner.equals("")) {
             JOptionPane.showMessageDialog(this, "The winner is " + winner + "!");
+            if (winner.equals("X")) {
+                this.xWins += 1;
+                this.xWinsLbl.setText(String.valueOf(this.xWins));
+            } else {
+                this.oWins += 1;
+                this.oWinsLbl.setText(String.valueOf(this.oWins));
+            }
             return true;
         }
         return false;
