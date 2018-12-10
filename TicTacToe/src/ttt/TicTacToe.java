@@ -130,13 +130,13 @@ public class TicTacToe extends JFrame implements ActionListener {
             }
         }
         //diagonals
-        String tl = this.board[0][0].getText();
-        if (!tl.equals("") && this.board[1][1].getText().equals(tl) && this.board[2][2].getText().equals(tl)) {
-            winner = tl;
-        }
-        String tr = this.board[0][2].getText();
-        if (!tr.equals("") && this.board[1][1].getText().equals(tr) && this.board[2][0].getText().equals(tr)) {
-            winner = tr;
+        String c = this.board[1][1].getText();
+        if (!c.equals("")) {
+            if ((c.equals(this.board[0][0].getText()) && c.equals(this.board[2][2].getText())) ||
+                (c.equals(this.board[0][2].getText()) && c.equals(this.board[2][0].getText()))
+            ) {
+                winner = c;
+            }
         }
         //declare winner
         if (!winner.equals("")) {
